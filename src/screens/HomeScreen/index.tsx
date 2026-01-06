@@ -1,8 +1,15 @@
 import React from "react";
 import { SafeAreaView, ScrollView, Text, View, Pressable } from "react-native";
 import { color } from "../../theme/color";
+// import { BookScreen}   from "../../screens/books/bookScreen";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+
+type RootStackParamList = {
+  Books: undefined;
+};
 
 export default function HomeScreen() {
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.bg }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
@@ -48,10 +55,10 @@ export default function HomeScreen() {
             </Text>
           </View>
         </View>
-
         
 
         <Pressable
+          onPress={() => navigation.navigate("Books")}
           style={{
             padding: 16,
             borderRadius: 18,
@@ -67,7 +74,7 @@ export default function HomeScreen() {
             Lihat semua buku yang tersimpan.
           </Text>
           <Text style={{ color: color.primary, marginTop: 10, fontWeight: "700" }}>
-            Open → 
+            Open →
           </Text>
         </Pressable>
 
