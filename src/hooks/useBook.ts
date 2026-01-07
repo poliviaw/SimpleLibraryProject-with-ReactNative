@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Book, BookStatus } from "../models/book";
-import * as bookService from "../service/BookService";
+import * as bookService from "../services/BookService";
 
 export function useBooks() {
   const [books, setBooks] = useState<Book[]>([]);

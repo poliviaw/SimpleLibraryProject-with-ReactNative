@@ -1,5 +1,6 @@
 import React from "react";
 import { ActivityIndicator, FlatList, Pressable, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useBooks } from "../../hooks/useBook";
 import { Book } from "../../models/book";
 import { color } from "../../theme/color";
@@ -114,9 +115,15 @@ function BookRow({
 
 export default function BookScreen() {
   const { books, loading, setStatus } = useBooks();
+  const navigation = useNavigation();
 
   return (
     <View style={{ flex: 1, backgroundColor: color.bg, padding: 16, gap: 12 ,paddingTop:40}}>
+      <Pressable
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={{ color: color.primary, fontWeight: "900" }}>← Back</Text>
+      </Pressable>
       <Text style={{ color: color.text, fontSize: 22, fontWeight: "900" }}>
         Browse Books
       </Text>

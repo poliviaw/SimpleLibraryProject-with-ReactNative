@@ -6,6 +6,7 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 
 type RootStackParamList = {
   Books: undefined;
+  BookForm: { bookId?: string } | undefined;
 };
 
 export default function HomeScreen() {
@@ -16,9 +17,6 @@ export default function HomeScreen() {
         <View style={{ gap: 12 }}>
           <Text style={{ color: color.card, fontSize: 30, fontWeight: "900" ,paddingTop: 30}}>
             Library Project
-          </Text>
-          <Text style={{ color: color.muted, lineHeight: 20 }}>
-            Aplikasi sederhana untuk menyimpan dan mengelola koleksi buku.
           </Text>
         </View>
 
@@ -79,6 +77,7 @@ export default function HomeScreen() {
         </Pressable>
 
         <Pressable
+          onPress={() => navigation.navigate("BookForm")}
           style={{
             padding: 16,
             borderRadius: 18,
