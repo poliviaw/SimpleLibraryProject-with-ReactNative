@@ -53,3 +53,8 @@ export async function updateBook(id: string, patch: Partial<Omit<Book, "id">>): 
 export async function updateBookStatus(id: string, status: BookStatus): Promise<void> {
   await updateBook(id, { status });
 }
+export async function deleteBook(id: string): Promise<void> {
+  const books = await listBooks();
+  const next = books.filter((b) => b.id !== id);
+  await setJson(KEY, next);
+}

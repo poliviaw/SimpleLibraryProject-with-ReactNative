@@ -1,9 +1,10 @@
 import React from "react";
-import { ActivityIndicator, FlatList, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, Pressable, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useBooks } from "../../hooks/useBook";
 import { Book } from "../../models/book";
 import { color } from "../../theme/color";
+import * as BookService from "../../services/BookService";
 
 function StatusBadge({
   status,
@@ -46,24 +47,26 @@ function RowHeader() {
         borderColor: color.border,
         borderRadius: 12,
         backgroundColor: color.card,
+        columnGap: 12,
       }}
     >
       <Text style={{ flex: 2, color: color.muted, fontWeight: "800"}}>Judul</Text>
       <Text style={{ flex: 2, color: color.muted, fontWeight: "800"}}>Penulis</Text>
-      <Text style={{ flex: 2, color: color.muted, fontWeight: "800"}}>Status</Text>
-      <Text style={{ flex: 1, color: color.muted, fontWeight: "800"}}>Edit</Text>
+      <Text style={{ flex: 2, color: color.muted, fontWeight: "800", textAlign: "center"}}>Status</Text>
+      {/* <Text style={{ flex: 1, color: color.muted, fontWeight: "800"}}>Aksi</Text> */}
     </View>
   );
 }
 
 function BookRow({
   item,
-  onToggleStatus,
   onReturned,
+  onOpenMenu,
 }: {
   item: Book;
   onToggleStatus: () => void;
   onReturned: () => void;
+  onOpenMenu: () => void;
 }) {
   const isBorrowed = item.status === "borrowed";
 
@@ -78,18 +81,27 @@ function BookRow({
         borderColor: color.border,
         borderRadius: 12,
         backgroundColor: "rgba(255,255,255,0.03)",
+        columnGap: 15,
       }}
     >
-      <Text style={{ flex: 2, color: color.text, fontWeight: "700" }} numberOfLines={1}>
-        {item.title}
-      </Text>
-      <Text style={{ flex: 2, color: color.muted }} numberOfLines={1}>
-        {item.author}
-      </Text>
-
-      <View style={{ flex: 2, alignItems: "center" }}>
-        <StatusBadge status={item.status} onPress={onToggleStatus} />
+      <View style={{ flex: 2 }}>
+        <Pressable
+          onPress={onOpenMenu}
+          hitSlop={10}
+          style={({ pressed }) => ({opacity: pressed ? 0.75 : 1 })}
+        >
+          <Text style={{color: color.text, fontWeight: "700" }} numberOfLines={1}>
+            {item.title}
+          </Text>
+        </Pressable>
       </View>
+
+      <View style={{ flex: 1.5 }}>
+        <Text style={{color: color.muted }} numberOfLines={1}>
+          {item.author}
+        </Text>
+      </View>
+
 
       <View style={{ flex: 2, alignItems: "center" }}>
         <Pressable
@@ -114,8 +126,43 @@ function BookRow({
 }
 
 export default function BookScreen() {
-  const { books, loading, setStatus } = useBooks();
-  const navigation = useNavigation();
+  const { books, loading, setStatus, refresh } = useBooks();
+  const navigation = useNavigation<any>();
+
+  const openMenu = (book: Book) => {
+    Alert.alert(
+      "Pilih aksi",
+      book.title,
+      [
+        {
+          text: "Edit",
+          onPress: () => navigation.navigate("BookForm", { bookId: book.id }),
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            Alert.alert(
+              "Hapus buku?",
+              `Yakin mau hapus "${book.title}"?`,
+              [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Delete",
+                  style: "destructive",
+                  onPress: async () => {
+                    await BookService.deleteBook(book.id);
+                    await refresh();
+                  },
+                },
+              ]
+            );
+          },
+        },
+        { text: "Cancel", style: "cancel" },
+      ]
+    );
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: color.bg, padding: 16, gap: 12 ,paddingTop:40}}>
@@ -136,10 +183,10 @@ export default function BookScreen() {
         <FlatList
           data={books}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ gap: 10, paddingBottom: 16 }}
           renderItem={({ item }) => (
             <BookRow
               item={item}
+              onOpenMenu={() => openMenu(item)}
               onToggleStatus={() =>
                 setStatus(item.id, item.status === "borrowed" ? "available" : "borrowed")
               }
