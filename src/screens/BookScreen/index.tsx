@@ -6,7 +6,7 @@ import { Book } from "../../models/Books";
 import { color } from "../../theme/color";
 import * as BookService from "../../services/BookService";
 
-import BookList from "../../components/Books/bookList";
+import BookList from "../../components/Books";
 
 export default function BookScreen() {
   const { books, loading, setStatus, refresh } = useBooks();

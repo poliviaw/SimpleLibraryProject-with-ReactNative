@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList, Text, View } from "react-native";
 import { Book } from "../../models/Books";
 import { color } from "../../theme/color";
-import BookCard from "../Books/bookCard";
+import BookCard from "./bookCard";
 
 type Props = {
   books: Book[];
