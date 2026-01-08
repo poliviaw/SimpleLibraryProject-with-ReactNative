@@ -57,14 +57,14 @@ export default function BookCard({
             minWidth: 110,
             alignItems: "center",
             backgroundColor: isBorrowed
-              ? color.success
-              : color.borrowed,
+              ? color.borrowed
+              : color.success,
             borderWidth: 1,
             borderColor: color.border,
           }}
         >
           <Text style={{ color: color.text, fontWeight: "800", fontSize: 12 }}>
-            {isBorrowed ? "Returned" : "Borrowed"}
+            {isBorrowed ? "Borrowed" : "Available"}
           </Text>
         </Pressable>
       </View>
