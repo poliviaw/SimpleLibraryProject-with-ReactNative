@@ -17,7 +17,6 @@ export default function BookList({
 }: Props) {
   return (
     <View style={{ gap: 10 }}>
-      {/* Header */}
       <View
         style={{
           flexDirection: "row",
@@ -44,7 +43,6 @@ export default function BookList({
         </Text>
       </View>
 
-      {/* List */}
       <FlatList
         data={books}
         keyExtractor={(item) => item.id}
@@ -58,7 +56,7 @@ export default function BookList({
         )}
         ListEmptyComponent={
           <Text style={{ color: color.muted, marginTop: 10 }}>
-            Belum ada buku yang terdaftar.
+            Belum ada buku yang terdaftar
           </Text>
         }
       />

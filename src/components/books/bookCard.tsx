@@ -57,12 +57,10 @@ export default function BookCard({
             minWidth: 110,
             alignItems: "center",
             backgroundColor: isBorrowed
-              ? "rgba(34,197,94,0.18)"
-              : "rgba(79,124,255,0.14)",
+              ? color.success
+              : color.borrowed,
             borderWidth: 1,
-            borderColor: isBorrowed
-              ? "rgba(34,197,94,0.40)"
-              : "rgba(79,124,255,0.35)",
+            borderColor: color.border,
           }}
         >
           <Text style={{ color: color.text, fontWeight: "800", fontSize: 12 }}>

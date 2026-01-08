@@ -7,4 +7,5 @@ export const color = {
   primary: "#EDF6F9",
   success: "#22C55E",
   border: "rgba(255,255,255,0.10)",
+  borrowed: "#F87171",
 };
