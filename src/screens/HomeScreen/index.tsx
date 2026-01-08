@@ -3,6 +3,8 @@ import { SafeAreaView, ScrollView, Text, View, Pressable } from "react-native";
 import { color } from "../../theme/color";
 // import { BookScreen}   from "../../screens/books/bookScreen";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useBooks } from "../../hooks/useBook";
+
 
 type RootStackParamList = {
   Books: undefined;
@@ -11,6 +13,12 @@ type RootStackParamList = {
 
 export default function HomeScreen() {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const { books, loading } = useBooks();
+
+    const totalBooks = books.length;
+    const borrowedBooks = books.filter(
+      (b) => b.status === "borrowed"
+    ).length;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.bg }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
@@ -33,7 +41,7 @@ export default function HomeScreen() {
           >
             <Text style={{ color: color.muted, fontSize: 12 }}>Total Books</Text>
             <Text style={{ color: color.text, fontSize: 20, fontWeight: "900" }}>
-              0
+              {loading ? "..." : totalBooks}
             </Text>
           </View>
 
@@ -49,7 +57,7 @@ export default function HomeScreen() {
           >
             <Text style={{ color: color.muted, fontSize: 12 }}>Borrowed</Text>
             <Text style={{ color: color.text, fontSize: 20, fontWeight: "900" }}>
-              -
+              {loading ? "..." : borrowedBooks}
             </Text>
           </View>
         </View>
