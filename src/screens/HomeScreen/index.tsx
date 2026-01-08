@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { SafeAreaView, ScrollView, Text, View, Pressable } from "react-native";
 import { color } from "../../theme/color";
 // import { BookScreen}   from "../../screens/books/bookScreen";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useNavigation, NavigationProp, useFocusEffect } from "@react-navigation/native";
 import { useBooks } from "../../hooks/useBook";
 
 
@@ -12,18 +12,24 @@ type RootStackParamList = {
 };
 
 export default function HomeScreen() {
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const { books, loading } = useBooks();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { books, loading, refresh } = useBooks(); 
 
-    const totalBooks = books.length;
-    const borrowedBooks = books.filter(
-      (b) => b.status === "borrowed"
-    ).length;
+  // buat reload data otomatis
+  useFocusEffect(
+    useCallback(() => {
+      refresh();
+    }, [refresh])
+  );
+
+  const totalBooks = books.length;
+  const borrowedBooks = books.filter((b) => b.status === "borrowed").length;
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.bg }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
         <View style={{ gap: 12 }}>
-          <Text style={{ color: color.card, fontSize: 30, fontWeight: "900" ,paddingTop: 30}}>
+          <Text style={{ color: color.card, fontSize: 30, fontWeight: "900", paddingTop: 30 }}>
             Library Project
           </Text>
         </View>
@@ -61,7 +67,6 @@ export default function HomeScreen() {
             </Text>
           </View>
         </View>
-        
 
         <Pressable
           onPress={() => navigation.navigate("Books")}
@@ -73,15 +78,9 @@ export default function HomeScreen() {
             borderColor: color.border,
           }}
         >
-          <Text style={{ color: color.text, fontWeight: "900", fontSize: 18 }}>
-            Browse Books
-          </Text>
-          <Text style={{ color: color.muted, marginTop: 6 }}>
-            Lihat semua buku yang tersimpan.
-          </Text>
-          <Text style={{ color: color.primary, marginTop: 10, fontWeight: "700" }}>
-            Open →
-          </Text>
+          <Text style={{ color: color.text, fontWeight: "900", fontSize: 18 }}>Browse Books</Text>
+          <Text style={{ color: color.muted, marginTop: 6 }}>Lihat semua buku yang tersimpan.</Text>
+          <Text style={{ color: color.primary, marginTop: 10, fontWeight: "700" }}>Open →</Text>
         </Pressable>
 
         <Pressable
@@ -94,18 +93,12 @@ export default function HomeScreen() {
             borderColor: color.border,
           }}
         >
-          <Text style={{ color: color.text, fontWeight: "900", fontSize: 18 }}>
-            Add New Book
-          </Text>
-          <Text style={{ color: color.muted, marginTop: 6 }}>
-            Tambahkan judul dan penulis buku.
-          </Text>
-          <Text style={{ color: color.primary, marginTop: 10, fontWeight: "700" }}>
-            Create → 
-          </Text>
+          <Text style={{ color: color.text, fontWeight: "900", fontSize: 18 }}>Add New Book</Text>
+          <Text style={{ color: color.muted, marginTop: 6 }}>Tambahkan judul dan penulis buku.</Text>
+          <Text style={{ color: color.primary, marginTop: 10, fontWeight: "700" }}>Create →</Text>
         </Pressable>
-
       </ScrollView>
     </SafeAreaView>
   );
 }
+  
