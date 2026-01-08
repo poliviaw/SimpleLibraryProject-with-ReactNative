@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Book, BookStatus } from "../models/book";
+import { Book, BookStatus } from "../models/Books";
 import * as bookService from "../services/BookService";
 
 export function useBooks() {
@@ -8,7 +8,6 @@ export function useBooks() {
 
   const refresh = useCallback(async () => {
     setLoading(true);
-    await bookService.seedIfEmpty();
     const data = await bookService.listBooks();
     setBooks(data);
     setLoading(false);

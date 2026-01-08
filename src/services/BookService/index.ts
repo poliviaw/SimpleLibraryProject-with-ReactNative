@@ -1,23 +1,10 @@
-import { Book, BookStatus } from "../../models/book";
-import { getJson, setJson } from "../../storage/storage";
+import { Book, BookStatus } from "../../models/Books";
+import { getJson, setJson } from "../../storage/db";
 
 const KEY = "books:v1";
 
 export async function listBooks(): Promise<Book[]> {
   return getJson<Book[]>(KEY, []);
-}
-
-export async function seedIfEmpty(): Promise<void> {
-  const existing = await listBooks();
-  if (existing.length > 0) return;
-
-  const now = Date.now();
-  const sample: Book[] = [
-    { id: "b1", title: "Atomic Habits", author: "James Clear", status: "available", updatedAt: now },
-    { id: "b2", title: "Clean Code", author: "Robert C. Martin", status: "borrowed", updatedAt: now },
-    { id: "b3", title: "Deep Work", author: "Cal Newport", status: "available", updatedAt: now },
-  ];
-  await setJson(KEY, sample);
 }
 
 
@@ -31,7 +18,7 @@ export async function addBook(input: { title: string; author: string }): Promise
   const now = Date.now();
 
   const newBook: Book = {
-    id: `b_${now}`, // id sederhana
+    id: `b_${now}`, 
     title: input.title.trim(),
     author: input.author.trim(),
     status: "available",
