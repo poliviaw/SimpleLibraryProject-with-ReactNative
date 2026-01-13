@@ -83,7 +83,16 @@ export default function BookForm({ navigation, route }: Props) {
       }
 
       setLoading(false);
-      navigation.navigate("Books");
+
+      // Biar saat back kembali nya bukan ke page list sebelumnya tapi ke home
+      navigation.reset({
+        index: 1,
+        routes: [
+          { name: "Home" },
+          { name: "Books" },
+        ],
+      });
+
     } catch (e) {
       setLoading(false);
       Alert.alert("Error", "Gagal menyimpan buku");
