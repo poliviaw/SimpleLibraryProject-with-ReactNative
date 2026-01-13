@@ -25,7 +25,7 @@ export default function BookForm({ navigation, route }: Props) {
   const [coverPic, setCoverPic] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
-  // Kalau nanti CameraScreen ngirim balik cover via params: { coverPic: "file://..." }
+  
   useEffect(() => {
     const uri = route.params?.coverPic;
     if (uri) setCoverPic(uri);
@@ -42,7 +42,7 @@ export default function BookForm({ navigation, route }: Props) {
 
       setTitle(book.title);
       setAuthor(book.author);
-      setCoverPic(book.coverPic); 
+      setCoverPic((prev) => prev ?? book.coverPic); 
     })();
 
     return () => {

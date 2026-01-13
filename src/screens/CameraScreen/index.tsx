@@ -2,7 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Pressable, SafeAreaView, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Camera, useCameraDevice, useCameraPermission } from "react-native-vision-camera";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RootStackParamList } from "../../navigator/MainNavigator";
+
 import { color } from "../../theme/color";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Camera">;
@@ -10,6 +12,8 @@ type Props = NativeStackScreenProps<RootStackParamList, "Camera">;
 export default function CameraScreen({ navigation, route }: Props) {
   const cameraRef = useRef<Camera>(null);
   const device = useCameraDevice("back");
+  const insets = useSafeAreaInsets();
+
   const { hasPermission, requestPermission } = useCameraPermission();
 
   const [isReady, setIsReady] = useState(false);
@@ -78,17 +82,17 @@ export default function CameraScreen({ navigation, route }: Props) {
           </Pressable>
 
           <Text style={{ color: "white", fontWeight: "900", alignSelf: "center" }}>
-            Take Cover
+            Take a Photo
           </Text>
 
           <View style={{ width: 60 }} />
         </View>
 
-        {/* Bottom bar */}
+        {/* Bottom button */}
         <View
           style={{
             position: "absolute",
-            bottom: 110,
+            bottom: insets.bottom + 40,
             left: 0,
             right: 0,
             alignItems: "center",
@@ -104,7 +108,7 @@ export default function CameraScreen({ navigation, route }: Props) {
               borderRadius: 37,
               borderWidth: 6,
               borderColor: "white",
-              backgroundColor: pressed ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.10)",
+              backgroundColor: pressed ? "rgba(0,255,255,5)" : "rgba(0,255,255,0.5)",
               opacity: !isReady || taking ? 0.5 : 1,
             })}
           />
