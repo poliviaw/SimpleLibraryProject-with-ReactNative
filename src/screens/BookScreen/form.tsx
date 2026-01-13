@@ -194,10 +194,7 @@ export default function BookForm({ navigation, route }: Props) {
                 })}
               >
                 <Text style={{ color: color.text, fontWeight: "900" }}>
-                  Add Cover Photo
-                </Text>
-                <Text style={{ color: color.muted, marginTop: 4 }}>
-                  (Nanti buka kamera)
+                  Add Book Cover Photo
                 </Text>
               </Pressable>
             )}

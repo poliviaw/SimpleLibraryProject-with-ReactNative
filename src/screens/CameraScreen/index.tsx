@@ -36,7 +36,6 @@ export default function CameraScreen({ navigation, route }: Props) {
         enableShutterSound: true,
       });
 
-      // Android biasanya path tanpa file://
       const uri = photo.path.startsWith("file://") ? photo.path : `file://${photo.path}`;
 
       // balik ke BookForm, kirim coverPic
@@ -89,7 +88,7 @@ export default function CameraScreen({ navigation, route }: Props) {
         <View
           style={{
             position: "absolute",
-            bottom: 30,
+            bottom: 110,
             left: 0,
             right: 0,
             alignItems: "center",
