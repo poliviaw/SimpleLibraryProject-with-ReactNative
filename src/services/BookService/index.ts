@@ -13,7 +13,7 @@ export async function getBookById(id: string): Promise<Book | undefined> {
   return books.find((b) => b.id === id);
 }
 
-export async function addBook(input: { title: string; author: string }): Promise<Book> {
+export async function addBook(input: { title: string; author: string, coverPic?: string}): Promise<Book> {
   const books = await listBooks();
   const now = Date.now();
 
@@ -23,6 +23,7 @@ export async function addBook(input: { title: string; author: string }): Promise
     author: input.author.trim(),
     status: "available",
     updatedAt: now,
+    coverPic: input.coverPic,
   };
 
   await setJson(KEY, [newBook, ...books]);
@@ -40,6 +41,11 @@ export async function updateBook(id: string, patch: Partial<Omit<Book, "id">>): 
 export async function updateBookStatus(id: string, status: BookStatus): Promise<void> {
   await updateBook(id, { status });
 }
+
+export async function updateBookCover(id: string, coverPic?: string): Promise<void> {
+  await updateBook(id, { coverPic });
+}
+
 export async function deleteBook(id: string): Promise<void> {
   const books = await listBooks();
   const next = books.filter((b) => b.id !== id);

@@ -6,4 +6,5 @@ export type Book = {
   author: string;
   status: BookStatus;
   updatedAt: number;
+  coverPic?: string;
 };
