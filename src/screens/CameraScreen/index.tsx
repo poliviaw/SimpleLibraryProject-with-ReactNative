@@ -43,7 +43,7 @@ export default function CameraScreen({ navigation, route }: Props) {
       const uri = photo.path.startsWith("file://") ? photo.path : `file://${photo.path}`;
 
       // balik ke BookForm, kirim coverPic
-      navigation.navigate("BookForm", {
+      navigation.replace("BookForm", {
         bookId: route.params?.bookId,
         coverPic: uri,
       });

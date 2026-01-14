@@ -1,4 +1,3 @@
-// Nambah + hapus buku + edit buku
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
@@ -24,16 +23,17 @@ export default function BookForm({ navigation, route }: Props) {
   const [author, setAuthor] = useState("");
   const [coverPic, setCoverPic] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  // buat preview pic(?)
+  const [showPreview, setShowPreview] = useState(false);
 
-  
   useEffect(() => {
     const uri = route.params?.coverPic;
     if (uri) setCoverPic(uri);
-  }, [route.params]);
+  }, [route.params?.coverPic]);
 
-  // load data kalau edit
   useEffect(() => {
     let mounted = true;
+
     (async () => {
       if (!bookId) return;
       const book = await bookService.getBookById(bookId);
@@ -42,7 +42,7 @@ export default function BookForm({ navigation, route }: Props) {
 
       setTitle(book.title);
       setAuthor(book.author);
-      setCoverPic((prev) => prev ?? book.coverPic); 
+      setCoverPic((prev) => prev ?? book.coverPic);
     })();
 
     return () => {
@@ -51,11 +51,12 @@ export default function BookForm({ navigation, route }: Props) {
   }, [bookId]);
 
   const onPickCover = () => {
-     navigation.navigate("Camera", { returnTo: "BookForm", bookId });
+    navigation.navigate("Camera", { returnTo: "BookForm", bookId });
   };
 
   const onRemoveCover = () => {
     setCoverPic(undefined);
+    setShowPreview(false);
   };
 
   const onSave = async () => {
@@ -72,7 +73,7 @@ export default function BookForm({ navigation, route }: Props) {
         await bookService.updateBook(bookId, {
           title: t,
           author: a,
-          coverPic, // ✅ update cover juga
+          coverPic,
         });
       } else {
         await bookService.addBook({
@@ -84,15 +85,11 @@ export default function BookForm({ navigation, route }: Props) {
 
       setLoading(false);
 
-      // Biar saat back kembali nya bukan ke page list sebelumnya tapi ke home
+      // biar back nya lebih rapi, di reset
       navigation.reset({
         index: 1,
-        routes: [
-          { name: "Home" },
-          { name: "Books" },
-        ],
+        routes: [{ name: "Home" }, { name: "Books" }],
       });
-
     } catch (e) {
       setLoading(false);
       Alert.alert("Error", "Gagal menyimpan buku");
@@ -132,24 +129,26 @@ export default function BookForm({ navigation, route }: Props) {
             gap: 12,
           }}
         >
-          {/* ✅ Cover Section */}
+          {/* Cover Section */}
           <View style={{ gap: 8 }}>
             <Text style={{ color: color.muted, fontWeight: "800" }}>Cover</Text>
 
             {coverPic ? (
               <View style={{ gap: 10 }}>
-                <Image
-                  source={{ uri: coverPic }}
-                  style={{
-                    width: "100%",
-                    height: 160,
-                    borderRadius: 14,
-                    borderWidth: 1,
-                    borderColor: color.border,
-                    backgroundColor: "rgba(255,255,255,0.06)",
-                  }}
-                  resizeMode="cover"
-                />
+                <Pressable onPress={() => setShowPreview(true)}>
+                  <Image
+                    source={{ uri: coverPic }}
+                    style={{
+                      width: "100%",
+                      height: 160,
+                      borderRadius: 14,
+                      borderWidth: 1,
+                      borderColor: color.border,
+                      backgroundColor: "rgba(255,255,255,0.06)",
+                    }}
+                    resizeMode="cover"
+                  />
+                </Pressable>
 
                 <View style={{ flexDirection: "row", gap: 10 }}>
                   <Pressable
@@ -165,9 +164,7 @@ export default function BookForm({ navigation, route }: Props) {
                       alignItems: "center",
                     })}
                   >
-                    <Text style={{ color: color.text, fontWeight: "900" }}>
-                      Retake
-                    </Text>
+                    <Text style={{ color: color.text, fontWeight: "900" }}>Retake</Text>
                   </Pressable>
 
                   <Pressable
@@ -183,9 +180,7 @@ export default function BookForm({ navigation, route }: Props) {
                       alignItems: "center",
                     })}
                   >
-                    <Text style={{ color: color.text, fontWeight: "900" }}>
-                      Remove
-                    </Text>
+                    <Text style={{ color: color.text, fontWeight: "900" }}>Remove</Text>
                   </Pressable>
                 </View>
               </View>
@@ -266,6 +261,48 @@ export default function BookForm({ navigation, route }: Props) {
           </Pressable>
         </View>
       </View>
+
+      {showPreview && !!coverPic && (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "rgba(0,0,0,0.95)",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 999,
+          }}
+        >
+
+          {/* Close button */}
+          <Pressable
+            onPress={() => setShowPreview(false)}
+            style={{
+              position: "absolute",
+              top: 50,
+              right: 18,
+              padding: 12,
+              zIndex: 10,
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 18, fontWeight: "900" }}>✕</Text>
+          </Pressable>
+
+          {/* Image */}
+          <Image
+            source={{ uri: coverPic }}
+            style={{
+              width: "92%",
+              height: "75%",
+              borderRadius: 12,
+            }}
+            resizeMode="contain"
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
